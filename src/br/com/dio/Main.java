@@ -14,6 +14,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Main {
 
     private final static Scanner scanner = new Scanner(System.in);
@@ -23,11 +27,20 @@ public class Main {
     private final static int BOARD_LIMIT = 9;
 
     public static void main(String[] args) {
-        final var positions = Stream.of(args)
-                .collect(toMap(
-                        k -> k.split(";")[0],
-                        v -> v.split(";")[1]
-                ));
+        Map<String, String> positions = null;
+        try {
+            // Lê o conteúdo do arquivo
+            String content = Files.readString(Paths.get("config.txt"));
+            positions = Stream.of(content.split(" "))
+                    .collect(toMap(
+                            k -> k.split(";")[0],
+                            v -> v.split(";")[1]
+                    ));
+            System.out.println(positions);
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo de configuração: " + e.getMessage());
+            return;
+        }
         var option = -1;
         while (true){
             System.out.println("Selecione uma das opções a seguir");
